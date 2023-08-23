@@ -22,6 +22,8 @@ function App() {
     // https://api.themoviedb.org/3/search/movie?api_key=07a61de5b731a869bc9cec8e25d2c8a8&language=en-US&page=1&query=Joker
     const [result, setResult] = useState([])
     const [inputValue, setInputValue] = useState('')
+    const [allGenres, setAllGenres] = useState([]);
+
     const inputHandler = (e) => {
         if (inputValue !== '') {
             setInputValue(e.target.value)
@@ -44,12 +46,25 @@ function App() {
             .catch(err => console.log(err))
     },[page,inputValue])
 
+
+    useEffect(() => {
+        async function fetchAllGenres() {
+            let res = await fetch(
+                "https://api.themoviedb.org/3/genre/movie/list?api_key=07a61de5b731a869bc9cec8e25d2c8a8&language=en-US"
+            );
+            let data = await res.json();
+            setAllGenres(data.genres);
+        }
+        // console.log(allGenres);
+        fetchAllGenres();
+    }, [allGenres]);
+
   
     return (
-        <Layout  inputHandler={inputHandler}>
+        <Layout  inputHandler={inputHandler} setPage={setPage} allGenres={allGenres}>
             <Routes>
                 <Route path='/' element={<Home inputValue={inputValue} result={result} nextPage={nextPage} prevPage={prevPage} page={page} />} />
-                <Route path="/genre/:genre" element={<GenreSearch  result={result} inputValue={inputValue} inputHandler={inputHandler} nextPage={nextPage} prevPage={prevPage} page={page} />}/>
+                <Route path="/genre/:genre" element={<GenreSearch  result={result} inputValue={inputValue} inputHandler={inputHandler} nextPage={nextPage} prevPage={prevPage} page={page} allGenres={allGenres}/>}/>
                 <Route path='/:movie_id' element={<MovieDetail />} />
                 {/* <Route path='/contact' element={<Contact />} /> */}
             </Routes>

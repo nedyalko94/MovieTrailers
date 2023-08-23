@@ -23,7 +23,9 @@ function Home({ inputValue, result,page,nextPage,prevPage }) {
 
   return (
     <>
-      <Container fluid={true} className="p-0 m-0 bg-dark">
+      <Container fluid={true} className=" bg-dark home  pt-1">
+      <div className="pt-0 pages"> <p className="searchesults m-0 text-white ">Page {page}  </p>  </div>
+
       
       </Container>
       <ul className="movies p-2 movies-grid bg-dark">

@@ -3,24 +3,37 @@ import { Button, ButtonGroup, CardGroup,Container } from 'react-bootstrap';
 import MovieCard from './components/Homepage/MovieCard';
 import { useParams } from 'react-router-dom';
 
-function GenreSearch({inputValue,result,page,prevPage,nextPage,}) {
+function GenreSearch({inputValue,result,page,prevPage,nextPage,allGenres}) {
 const{genre}=useParams()
 const [movies, setMovies] = useState([]);
+const [genreName,setGenreName]= useState('')
 
-const fetchMovies = async () => {
-  let res = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=07a61de5b731a869bc9cec8e25d2c8a8&language=en-US&page=${page}&with_genres=${genre}`
-  );
-  let data = await res.json();
-  setMovies(data.results);
- 
-};
+
+
+useEffect(()=>{
+allGenres.forEach( element => {
+  if((element.id).toString() === genre){
+    setGenreName(element.name)
+  
+}});
+
+},[genre,allGenres])
 
 
 useEffect(() => {
-    
+  const fetchMovies = async () => {
+    let res = await fetch(
+      `https://api.themoviedb.org/3/discover/movie?api_key=07a61de5b731a869bc9cec8e25d2c8a8&language=en-US&page=${page}&with_genres=${genre}`
+    );
+    let data = await res.json();
+    setMovies(data.results);
+   
+  };
   
     fetchMovies()
+
+
+
    
   },[page,genre,movies]);
 
@@ -33,8 +46,8 @@ useEffect(() => {
         {/* <CarouselComponent /> */}
 
         <Container fluid className=" bg-dark home  pt-1">
-       <div className="pt-0 pages"> <p className="searchesults m-0 text-white ">Page {page} of results</p>  
-       {/* {console.log(page)}   */}
+       <div className="pt-0 pages"> <p className="searchesults m-0 text-white ">Page {page} of category {genreName}</p>  
+       {/* {console.log(allGenres)}   */}
        </div>
      
           <CardGroup
